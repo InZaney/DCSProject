@@ -3,8 +3,8 @@
 This project is to create a website for the client Deep Current Studio. They are a group in game development and want to get themselves to the public. Currently they have developed one game called Disaster Response Force that will feature in this project.
 
 ## Meet the Team
-- Zane Marcoe
-- Anthony Brunner
+- [Zane Marcoe](https://github.com/InZaney)
+- [Anthony Brunner](https://github.com/AnthonyBrunner)
 
 ## What the Client is looking for
 - Multi-page site with static navigation to all pages
