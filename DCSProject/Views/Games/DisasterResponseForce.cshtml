@@ -1,5 +1,47 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model DCSProject.Models.GameInfo
 @{
+	ViewData["Title"] = Model.Title;
 }
+
+<!--Top Of the page: Game title and artwork-->
+<div class="text-center">
+	<h1 class="display-4">@Model.Title</h1>
+
+	<img src="@Model.HeaderImageUrl"
+		 alt="@Model.Title artwork"
+		 class="img-fluid my-3"
+
+	<a href="@Model.SteamUrl" target="_blank" class="btn btn-primary btn-lg"> View on Steam</a> 
+</div>
+
+<!--About the Game-->
+<h2>About the Game</h2>
+<p>@Model.Description</p>
+
+<!--Quick Game facts-->
+<h2>Quick Facts</h2>
+<ul>
+	<li>DEveloper: @Model.Developer</li>
+	<li>Release Date: @Model.ReleaseDate.ToString("MMMM d, yyyy")</li>
+	<li>Price: $@Model.Price</li>
+	<li>Platform: @Model.Platform</li>
+	<li>Players: @Model.PlayerCount</li>
+</ul>
+
+<!--Key Features-->
+<h2>Key Features</h2>
+<ul>
+	@foreach (string feature in Model.Features)
+	{
+		<li>@feature</li>
+	}
+</ul>
+
+<!--System Requirements-->
+<h2>Minimum System Requirements</h2>
+<ul>
+	@foreach (string requirement in Model.SystemRequirements)
+	{
+		<li>@requirement</li>
+	}
+</ul>

@@ -48,8 +48,24 @@ namespace DCSProject.Models
         public required string SteamUrl { get; set; }
 
         /// <summary>
+        /// URL for the header image
+        /// </summary>
+        [DataType(DataType.ImageUrl)]
+        public required string HeaderImageUrl { get; set; }
+
+        /// <summary>
         /// List of the games features
         /// </summary>
         public List<string> Features { get; set; } = new();
+
+        /// <summary>
+        /// List of the required system specifications to play the game
+        /// </summary>
+        public List<string> SystemRequirements { get; set; } = new();
+
+        /// <summary>
+        /// The number of players the game supports
+        /// </summary>
+        public required string PlayerCount { get; set; }
     }
 }
