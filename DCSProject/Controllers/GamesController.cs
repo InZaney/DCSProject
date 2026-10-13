@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace DCSProject.Controllers;
 
-public class GameController : Controller
+public class GamesController : Controller
 {
     public IActionResult Index()
     {
