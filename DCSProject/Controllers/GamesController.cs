@@ -37,7 +37,7 @@ public class GamesController : Controller
         SteamAppData? steam = await GetSteamDataAsync();
 
         // If reply recieved from steam, overwrite hard-coded data
-        if (steam == null)
+        if (steam != null)
         {
             game.Title = steam.Name ?? game.Title;
             game.Description = steam.ShortDescription ?? game.Description;
