@@ -6,7 +6,7 @@ namespace DCSProject.Models;
 // These clases are built to match the JSON that steam returns from the request.
 // Only listing the fields utilized on the site and ignoring all others
 
-public class SteamModels
+public class SteamAppResponse
 {
     /// <summary>
     /// Gets or sets a value indicating whether the operation succeeded.
