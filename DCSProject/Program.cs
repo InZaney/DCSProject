@@ -1,7 +1,15 @@
+using DCSProject.Controllers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Lets the site remember data for a while (used to cache the Steam response)
+builder.Services.AddMemoryCache();
+
+// Lets GamesController receive an HttpClient so it can call the Steam API
+builder.Services.AddHttpClient<GamesController>();
 
 var app = builder.Build();
 
