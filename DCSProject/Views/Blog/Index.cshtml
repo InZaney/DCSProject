@@ -1,0 +1,21 @@
+﻿@model List<BlogPost>
+@{
+	ViewData["Title"] = "Blog";
+}
+
+@foreach (BlogPost post in Model)
+{
+    <article class="card mb-3">
+        <div class="card-body">
+            <h2 class="h4 card-title">@post.Title</h2>
+
+            <h3 class="h6 card-subtitle mb-2 text-muted">
+                @post.DatePosted.ToString("MMMM d, yyyy") by @post.Author
+            </h3>
+
+            <p class="card-text">
+                @post.BlogContent
+            </p>
+        </div>
+    </article>
+}
