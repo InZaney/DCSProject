@@ -182,7 +182,7 @@ public class GamesController : Controller
         string html = minimum.GetString() ?? "";
 
         // Go through and find every <li>...<li>
-        foreach (Match match in Regex.Matches(html, "<li>(.*?)<li>", RegexOptions.Singleline))
+        foreach (Match match in Regex.Matches(html, "<li>(.*?)</li>", RegexOptions.Singleline))
         {
             // Remove the tags (<strong>,<br>)
             string text = Regex.Replace(match.Groups[1].Value, "<[^>]+>", "");
