@@ -6,10 +6,10 @@ namespace DCSProject.Services;
 /// List of every game made by the studio
 /// To Add a new game: Copy the template from the commented out section bellow
 /// </summary>
-public class GameCatalog
+public static class GameCatalog
 {
     // Backup information used to build the page if Steam does not return anything or is down
-    private static readonly List<GameEntry> All = new List<GameEntry>()
+    public static readonly List<GameEntry> All = new List<GameEntry>()
     {
         new GameEntry()
         {
