@@ -1,4 +1,5 @@
 using DCSProject.Controllers;
+using DCSProject.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +9,12 @@ builder.Services.AddControllersWithViews();
 // Lets the site remember data for a while (used to cache the Steam response)
 builder.Services.AddMemoryCache();
 
-// Lets GamesController receive an HttpClient so it can call the Steam API
-builder.Services.AddHttpClient<GamesController>();
+// Lets SteamService receive an HttpClient so it can call the Steam API
+// Timeout added to ensure if steam is slow it does not hang up the page
+builder.Services.AddHttpClient<SteamService>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
 
 var app = builder.Build();
 
