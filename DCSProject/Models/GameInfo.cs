@@ -13,6 +13,11 @@ namespace DCSProject.Models
         /// </summary>
         [StringLength(100)]
         public required string Title { get; set; }
+
+        /// <summary>
+        /// Short name without spaces used for the page URL
+        /// </summary>
+        public string GameName { get; set; } = "";
         
         /// <summary>
         /// Description of the game
