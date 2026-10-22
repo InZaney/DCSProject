@@ -3,6 +3,13 @@
 	ViewData["Title"] = Model.Title;
 }
 
+<!--Link that returns the user back to the games list. Only appears if there is more than one game in the catalog-->
+<!--&larr creates a left arrrow character-->
+@if (ViewBag.MoreThanOneGame == true)
+{
+	<a asp-controller="Games" asp-action="Index">&larr; All Games</a>
+}
+
 <!--Top Of the page: Game title and artwork-->
 <div class="text-center">
 	<h1 class="display-4">@Model.Title</h1>
