@@ -63,7 +63,7 @@ namespace DCSProject.Models
         /// <summary>
         /// List of the games features
         /// </summary>
-        public List<string> Features { get; set; } = new();
+        ///public List<string> Features { get; set; } = new();
 
         /// <summary>
         /// List of the required system specifications to play the game

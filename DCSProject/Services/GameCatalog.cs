@@ -30,15 +30,10 @@ public static class GameCatalog
                 SteamUrl = "https://store.steampowered.com/app/4735850/Disaster_Response_Force/",
                 // Image is hosted by Steam for now. Later we can download it and use a local file.
                 HeaderImageUrl = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4735850/2b4c823182c37f0117302f40904db2873407c40c/header.jpg",
-                Features = new List<string>()
-                    {
-                        "Three playable characters, each with different weapons",
-                        "In-field upgrades that improve your character",
-                        "A vending machine that offers upgrades between areas",
-                        "Enemies get stronger the deeper you go into the city",
-                        "Score-based gameplay focused on kills and points",
-                        "Steam Achievements"
-                    },
+                //Features = new List<string>()
+                //    {
+                //        ""
+                //    },
                 // Minimum requirements to run the game
                 SystemRequirements = new List<string>()
                     {
