@@ -64,12 +64,12 @@ public static class GameCatalog
         ///         Platform = "",
         ///         SteamUrl = "",
         ///         HeaderImageUrl = "",
-        ///         Features = new List<string>()
-        ///         {
-        ///             "",
-        ///             "",
-        ///             ""
-        ///         },
+        ///         //Features = new List<string>()
+        ///         //{
+        ///         //    "",
+        ///         //    "",
+        ///         //    ""
+        ///         //},
         ///         SystemRequirements = new List<string>()
         ///         {
         ///             "OS:",
