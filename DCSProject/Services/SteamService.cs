@@ -26,6 +26,7 @@ public class SteamService
     {
         // Hard-coded information and backup if steam is down
         GameInfo game = entry.CreateDefaults();
+        game.GameName = entry.GameName;
 
         // Make request to steam
         SteamAppData? steam = await GetSteamDataAsync(entry.SteamAppId);
