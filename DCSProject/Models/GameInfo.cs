@@ -13,7 +13,13 @@ namespace DCSProject.Models
         /// </summary>
         [StringLength(100)]
         public required string Title { get; set; }
-        
+
+        /// <summary>
+        /// Short name without spaces used for the page URL
+        /// </summary>
+        [StringLength(100)]
+        public string GameName { get; set; } = "";
+
         /// <summary>
         /// Description of the game
         /// </summary>
@@ -22,6 +28,7 @@ namespace DCSProject.Models
         /// <summary>
         /// The studio that created the game
         /// </summary>
+        [StringLength(75)]
         public required string Developer { get; set; }
 
         /// <summary>
@@ -56,7 +63,7 @@ namespace DCSProject.Models
         /// <summary>
         /// List of the games features
         /// </summary>
-        public List<string> Features { get; set; } = new();
+        ///public List<string> Features { get; set; } = new();
 
         /// <summary>
         /// List of the required system specifications to play the game
@@ -66,6 +73,7 @@ namespace DCSProject.Models
         /// <summary>
         /// The number of players the game supports
         /// </summary>
+        [StringLength(75)]
         public required string PlayerCount { get; set; }
     }
 }

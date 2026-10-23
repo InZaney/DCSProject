@@ -1,0 +1,25 @@
+﻿@model List<DCSProject.Models.GameInfo>
+@{
+	ViewData["Title"] = "Games";
+}
+
+<h1>Our Games</h1>
+
+<div class="row">
+	<!--Loop to repeat the card for each game in the catalog-->
+	@foreach (DCSProject.Models.GameInfo game in Model)
+	{
+		<div class="col-md-6 mb-4">
+			<div class="card h-100">
+				<img src="@game.HeaderImageUrl" class="card-img-top" alt="@game.Title artwork"/>
+				<div class="card-body">
+					<h2 class="h4 card-title">@game.Title</h2>
+					<p class="text-muted">@game.ReleaseDate.ToString("MMMM d, yyyy") - @game.Price</p>
+
+					<!--Button to send the user to the games detailed page-->
+					<a class="btn btn-primary" asp-controller="Games" asp-action="Details" asp-route-id="@game.GameName">View Game</a>
+				</div>
+			</div>
+		</div>
+	}
+</div>
