@@ -40,7 +40,7 @@ public class BlogController : Controller
                 Author = "Deep Current Studios",
                 DatePosted = new DateOnly(2026, 10, 17),
                 BlogContent = "Disaster Response Force is available to play right now on Steam! Go check" +
-                "it out via the link on our games page!"
+                " it out via the link on our games page!"
             },
 
             new BlogPost()
@@ -48,7 +48,7 @@ public class BlogController : Controller
                 BlogPostId= 3,
                 Title = "Whats next?!",
                 Author = "Deep Current Studio",
-                DatePosted = new DateOnly(2026, 10, 17),
+                DatePosted = new DateOnly(2026, 10, 14),
                 BlogContent = "We have some exciting news coming very soon! Be sure to keep an eye out here" +
                 "and on our social media's so you do not miss it!"
             },
