@@ -63,5 +63,3 @@ assignees: ''
 <!--Who will review the changes?-->
 
 @
-
-https://github.com/YOUR-USER/YOUR-REPO/tree/main/.github/ISSUE_TEMPLATE
