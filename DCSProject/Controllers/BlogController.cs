@@ -50,7 +50,7 @@ public class BlogController : Controller
                 Author = "Deep Current Studio",
                 DatePosted = new DateOnly(2026, 10, 14),
                 BlogContent = "We have some exciting news coming very soon! Be sure to keep an eye out here" +
-                "and on our social media's so you do not miss it!"
+                " and on our social media's so you do not miss it!"
             },
 
         };
