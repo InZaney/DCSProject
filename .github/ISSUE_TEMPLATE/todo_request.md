@@ -1,9 +1,9 @@
 ---
-Name:
-About:
-Title:
-Label(s):
-Assignee(s):
+Name: To Do Request
+About: Track a task, chore, or piece of work to be done
+Title: "[To Do]:"
+Label(s): todo
+Assignee(s): ''
 ---
 
 ## Task
@@ -63,3 +63,5 @@ Assignee(s):
 <!--Who will review the changes?-->
 
 @
+
+https://github.com/YOUR-USER/YOUR-REPO/tree/main/.github/ISSUE_TEMPLATE
