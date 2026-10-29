@@ -1,9 +1,9 @@
 ---
-Name: Issue report
-About: Report a problem, concern, or bug
-Title: "[Issue]:"
-Label(s): issue
-Assignee(s): ''
+name: Issue report
+about: Report a problem, concern, or bug
+title: "[Issue]:"
+labels: issue
+assignees: ''
 ---
 
 ## Issue type

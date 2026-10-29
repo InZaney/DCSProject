@@ -1,9 +1,9 @@
 ---
-Name: To Do Request
-About: Track a task, chore, or piece of work to be done
-Title: "[To Do]:"
-Label(s): todo
-Assignee(s): ''
+name: To Do Request
+about: Track a task, chore, or piece of work to be done
+title: "[To Do]:"
+labels: todo
+assignees: ''
 ---
 
 ## Task
