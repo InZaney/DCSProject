@@ -33,7 +33,7 @@ assignees: ''
 <!--Deadline for implementation-->
 
 - [ ] No target date
-- [ ] Complete by:
+- [ ] Complete by: **<ins>INSERT DATE HERE</ins>**
 
 ## Expectations:
 *  All work done and pull request **<ins>MUST</ins>** be peer reviewed before being merged into the main branch
