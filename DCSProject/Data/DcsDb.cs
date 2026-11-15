@@ -39,8 +39,20 @@ public class DcsDb : IdentityDbContext<ApplicationUser>
         // Create the two roles the site uses. Fixed Ids keep the migration the same on every computer.
         // (The login issue will assign users to these roles.)
         modelBuilder.Entity<IdentityRole>().HasData(
-            new IdentityRole { Id = "a1b2c3d4-0001-4000-8000-000000000001", Name = "Admin", NormalizedName = "ADMIN" },
-            new IdentityRole { Id = "a1b2c3d4-0002-4000-8000-000000000002", Name = "User", NormalizedName = "USER" }
+            new IdentityRole
+            {
+                Id = "a1b2c3d4-0001-4000-8000-000000000001",
+                Name = "Admin",
+                NormalizedName = "ADMIN",
+                ConcurrencyStamp = "a1b2c3d4-1001-4000-8000-000000000001"
+            },
+            new IdentityRole
+            {
+                Id = "a1b2c3d4-0002-4000-8000-000000000002",
+                Name = "User",
+                NormalizedName = "USER",
+                ConcurrencyStamp = "a1b2c3d4-1002-4000-8000-000000000002"
+            }
         );
     }
 }
