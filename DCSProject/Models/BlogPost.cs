@@ -36,4 +36,9 @@ public class BlogPost
     /// </summary>
     [DataType(DataType.Date)]
     public DateOnly DatePosted { get; set; }
+
+    /// <summary>
+    /// Comments left on the post
+    /// </summary>
+    public List<Comment> Comments { get; set; } = new();
 }
