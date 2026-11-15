@@ -1,13 +1,35 @@
 ﻿using System.Runtime.CompilerServices;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DCSProject.Models
 {
     /// <summary>
     /// Represents a single game made by the studio
     /// </summary>
+    [Index(nameof(GameName), IsUnique = true)] // No two games can share the same name
+    [Index(nameof(SteamAppId), IsUnique = true)] // No two games can have the same SteamId
     public class GameInfo
     {
+        /// <summary>
+        /// Name of the game
+        /// </summary>
+        [StringLength(100)]
+        [Key]
+        public required string GameId { get; set; }
+
+        /// <summary>
+        /// Steam app Id used for the api call
+        /// </summary>
+        [StringLength(30)]
+        public string SteamAppId { get; set; } = "";
+
+        /// <summary>
+        /// Used to keep track when the data was last updated
+        /// </summary>
+        public DateTime LastUpdated { get; set; }
+
         /// <summary>
         /// Name of the game
         /// </summary>
@@ -41,6 +63,7 @@ namespace DCSProject.Models
         /// Price of the game
         /// </summary>
         [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(8, 2)")] // Up to 999,999.99
         public decimal Price {  get; set; }
 
         /// <summary>
@@ -52,6 +75,7 @@ namespace DCSProject.Models
         /// Link to the games steam page
         /// </summary>
         [DataType(DataType.Url)]
+        [StringLength(300)]
         public required string SteamUrl { get; set; }
 
         /// <summary>
