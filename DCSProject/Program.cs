@@ -1,5 +1,7 @@
 using DCSProject.Controllers;
+using DCSProject.Data;
 using DCSProject.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,13 @@ builder.Services.AddHttpClient<SteamService>(client =>
 {
     client.Timeout = TimeSpan.FromSeconds(10);
 });
+
+// Connection string comes from User Secrets (never from a committed file). See docs/DATABASE.md
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' was not found. Set it with User Secrets - see docs/DATABASE.md.");
+
+// Configure DB Context settings
+builder.Services.AddDbContext<DcsDb>(options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
