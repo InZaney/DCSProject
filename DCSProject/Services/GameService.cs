@@ -15,6 +15,8 @@ public class GameService
     private readonly IMemoryCache _cache; // short-term memory kept in the servers ram
 
     // How old our database data can be before we ask Steam for it again
+    // Set to 7 days to avoid hitting steam with multiple API calls. Could set to FromHours and pick a value
+    // to help catch any flash sales
     private static readonly TimeSpan RefreshAfter = TimeSpan.FromDays(7);
 
     // If Steam fails or does not respond, defined time to wait before trying again
