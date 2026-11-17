@@ -49,6 +49,7 @@ public class GameService
     /// </summary>
     public async Task<int> GetGameCountAsync()
     {
+        return await _db.Games.CountAsync();
     }
 
     /// <summary>
