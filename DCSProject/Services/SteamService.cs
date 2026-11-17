@@ -22,14 +22,12 @@ public class SteamService
         _cache = cache;
     }
 
-    public async Task<GameInfo> GetGameAsync(GameEntry entry)
+    // Asks Steam about the game and writes the answer onto the GameInfo that was passed in.
+    // Returns True if Steam answered, returns False if it did not and the game is left exactly how it was
+    public async Task<bool> ApplySteamDataAsync(GameInfo game)
     {
-        // Hard-coded information and backup if steam is down
-        GameInfo game = entry.CreateDefaults();
-        game.GameName = entry.GameName;
-
         // Make request to steam
-        SteamAppData? steam = await GetSteamDataAsync(entry.SteamAppId);
+        SteamAppData? steam = await GetSteamDataAsync(game.SteamAppId);
 
         // If reply received from steam, overwrite hard-coded data
         if (steam != null)
@@ -85,7 +83,9 @@ public class SteamService
                 game.SystemRequirements = requirements;
             }
         }
-        return game;
+
+        
+        return steam != null;
     }
 
     // Pulls the games details from Steam or cache if recently asked. Returns null if no answer
