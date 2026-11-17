@@ -11,6 +11,9 @@ builder.Services.AddControllersWithViews();
 // Lets the site remember data for a while (used to cache the Steam response)
 builder.Services.AddMemoryCache();
 
+// Register the GameService 
+builder.Services.AddScoped<GameService>();
+
 // Lets SteamService receive an HttpClient so it can call the Steam API
 // Timeout added to ensure if steam is slow it does not hang up the page
 builder.Services.AddHttpClient<SteamService>(client =>
