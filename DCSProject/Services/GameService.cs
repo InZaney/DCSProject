@@ -15,7 +15,7 @@ public class GameService
     private readonly IMemoryCache _cache; // short-term memory kept in the servers ram
 
     // How old our database data can be before we ask Steam for it again
-    private static readonly TimeSpan RefreshAfter = TimeSpan.FromHours(1);
+    private static readonly TimeSpan RefreshAfter = TimeSpan.FromDays(7);
 
     // If Steam fails or does not respond, defined time to wait before trying again
     private static readonly TimeSpan RetryAfter = TimeSpan.FromMinutes(5);
@@ -61,6 +61,31 @@ public class GameService
     /// </summary>
     private async Task RefreshIfOldAsync(GameInfo game)
     {
+        // Saved copy is still good, do nothing
+        // Determined by the set variable RefreshAfter declared above
+        if (DateTime.UtcNow - game.LastUpdated < RefreshAfter)
+        {
+            return;
+        }
 
+        // Steam failed so we do not want to keep visitors waiting 
+        string retryKey = "steam-retry-" + game.SteamAppId;
+        if (_cache.TryGetValue(retryKey, out _))
+        {
+            // Steam failed so skip this game
+            return;
+        }
+
+        // Get an answer from SteamService if Steam answered or not 
+        bool steamAnswered = await _steam.ApplySteamDataAsync(game);
+
+        if (steamAnswered)
+        {
+            game.LastUpdated = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+        } else
+        {
+            _cache.Set(retryKey, true, RetryAfter);
+        }
     }
 }
