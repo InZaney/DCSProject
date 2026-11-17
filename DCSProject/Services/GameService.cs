@@ -35,6 +35,17 @@ public class GameService
     /// </summary>
     public async Task<List<GameInfo>> GetAllGamesAsync()
     {
+        await AddStarterGamesAsync();
+
+        List<GameInfo> games = await _db.Games.OrderBy(g => g.Title).ToListAsync();
+
+        // One at a time since dbcontext cannot do two things at once
+        foreach (GameInfo game in games)
+        {
+            await RefreshIfOldAsync(game);
+        }
+
+        return games;
     }
 
     /// <summary>
@@ -42,6 +53,17 @@ public class GameService
     /// </summary>
     public async Task<GameInfo?> GetGameAsync(string gameName)
     {
+        await AddStarterGamesAsync();
+
+        // Sql will ignore casing when comparing by default
+        GameInfo? game = await _db.Games.FirstOrDefaultAsync(g => g.GameName == gameName);
+
+        if (game != null)
+        {
+            await RefreshIfOldAsync(game);
+        }
+
+        return game;
     }
 
     /// <summary>
