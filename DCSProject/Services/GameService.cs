@@ -1,4 +1,5 @@
 ﻿using DCSProject.Data;
+using DCSProject.Models;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace DCSProject.Services;
@@ -12,4 +13,54 @@ public class GameService
     private readonly DcsDb _db; // The project database
     private readonly SteamService _steam; // The steam API caller
     private readonly IMemoryCache _cache; // short-term memory kept in the servers ram
+
+    // How old our database data can be before we ask Steam for it again
+    private static readonly TimeSpan RefreshAfter = TimeSpan.FromHours(1);
+
+    // If Steam fails or does not respond, defined time to wait before trying again
+    private static readonly TimeSpan RetryAfter = TimeSpan.FromMinutes(5);
+
+    public GameService(DcsDb db, SteamService steam, IMemoryCache cache)
+    {
+        _db = db;
+        _steam = steam;
+        _cache = cache;
+    }
+
+    /// <summary>
+    /// Pulls every game from the catalog and refreshes any that are out of date
+    /// </summary>
+    public async Task<List<GameInfo>> GetAllGamesAsync()
+    {
+    }
+
+    /// <summary>
+    /// Pulls one game by its GameName and returns null if there is no match
+    /// </summary>
+    public async Task<GameInfo?> GetGameAsync(string gameName)
+    {
+    }
+
+    /// <summary>
+    /// Counts how many games are in the catalog. Decider on if the games page shows "All Games" or not
+    /// </summary>
+    public async Task<int> GetGameCountAsync()
+    {
+    }
+
+    /// <summary>
+    /// Copies the games from the catalog into the database only if the table is empty
+    /// </summary>
+    private async Task AddStarterGamesAsync()
+    {
+
+    }
+
+    /// <summary>
+    /// Asks Steam for new data if the saved copy is old. If steam is down it will continue to use the saved copy
+    /// </summary>
+    private async Task RefreshIfOldAsync(GameInfo game)
+    {
+
+    }
 }
