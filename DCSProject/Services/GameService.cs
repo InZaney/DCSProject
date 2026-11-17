@@ -1,4 +1,7 @@
-﻿namespace DCSProject.Services;
+﻿using DCSProject.Data;
+using Microsoft.Extensions.Caching.Memory;
+
+namespace DCSProject.Services;
 
 /// <summary>
 /// This service will read games from the database and keep them up to date with Steam
@@ -6,4 +9,7 @@
 /// </summary>
 public class GameService
 {
+    private readonly DcsDb _db; // The project database
+    private readonly SteamService _steam; // The steam API caller
+    private readonly IMemoryCache _cache; // short-term memory kept in the servers ram
 }
