@@ -1,5 +1,6 @@
 ﻿using DCSProject.Data;
 using DCSProject.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace DCSProject.Services;
@@ -55,6 +56,24 @@ public class GameService
     /// </summary>
     private async Task AddStarterGamesAsync()
     {
+        if (await _db.Games.AnyAsync())
+        {
+            return;
+        }
+
+        foreach (GameEntry entry in GameCatalog.All)
+        {
+            GameInfo game = entry.CreateDefaults();
+            game.GameName = entry.GameName;
+            game.SteamAppId = entry.SteamAppId;
+
+            // Never checked yet, so the first visit will ask Steam
+            game.LastUpdated = DateTime.MinValue;
+
+            _db.Games.Add(game);
+        }
+
+        await _db.SaveChangesAsync();
 
     }
 
