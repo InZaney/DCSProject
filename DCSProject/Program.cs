@@ -58,6 +58,12 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;                   // stays signed in while the user keeps using the site
 });
 
+// Re-checks logged-in users every minute (the default is 30), so role changes take effect quickly
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+{
+    options.ValidationInterval = TimeSpan.FromMinutes(1);
+});
+
 var app = builder.Build();
 
 // Creates the first Admin account from the User Secrets (if they are set). See docs/AUTH.md
