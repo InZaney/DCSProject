@@ -132,4 +132,42 @@ public class GameService
             _cache.Set(retryKey, true, RetryAfter);
         }
     }
+
+    // Check to see if game is already exist in the project. Returns true if it is
+    public async Task<bool> GameExistsAsync(string gameName, string steamAppId)
+    {
+        return await _db.Games.AnyAsync(g => g.GameName == gameName || g.SteamAppId == steamAppId);
+    }
+
+    // Adds a new game to the catalog and Steam will fill in the details with the API call
+    public async Task<GameInfo?> AddGameAsync(string gameName, string steampAppId)
+    {
+        // Placeholder text for the required fields. Steam overwrites what it knows
+        GameInfo game = new GameInfo()
+        {
+            GameName = gameName,
+            SteamAppId = steampAppId,
+            Title = gameName,
+            Description = "",
+            Developer = "",
+            Platform = "Not listed",
+            PlayerCount = "Not listed",
+            SteamUrl = "https://store.steampowered.com/app/" + steampAppId,
+            HeaderImageUrl = ""
+        };
+
+        bool steamAnswered = await _steam.ApplySteamDataAsync(game);
+
+        // No answer means the Steam id is probably wrong so do not save an empty game
+        if (!steamAnswered)
+        {
+            return null;
+        }
+
+        game.LastUpdated = DateTime.UtcNow;
+        _db.Games.Add(game);
+        await _db.SaveChangesAsync();
+
+        return game;
+    }
 }
