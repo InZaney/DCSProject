@@ -1,6 +1,8 @@
 using DCSProject.Controllers;
 using DCSProject.Data;
+using DCSProject.Models;
 using DCSProject.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +26,37 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 
 // Configure DB Context settings
 builder.Services.AddDbContext<DcsDb>(options => options.UseSqlServer(connectionString));
+
+// Login system (ASP.NET Identity). Handles users, hashed passwords, roles and the login cookie
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    // Password rules
+    options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+
+    // Two accounts cannot share the same email
+    options.User.RequireUniqueEmail = true;
+
+    // Lock the account for 15 minutes after 5 wrong passwords in a row
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+})
+.AddEntityFrameworkStores<DcsDb>()   // store users and roles in our database
+.AddClaimsPrincipalFactory<ApplicationUserClaimsPrincipalFactory>();   // adds the display name to the login cookie
+
+// Settings for the login cookie
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";               // where visitors are sent when they must sign in
+    options.AccessDeniedPath = "/Account/AccessDenied"; // where signed-in users are sent if their role is not allowed
+    options.Cookie.HttpOnly = true;                     // JavaScript cannot read the cookie
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // only sent over https
+    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+    options.SlidingExpiration = true;                   // stays signed in while the user keeps using the site
+});
 
 var app = builder.Build();
 
