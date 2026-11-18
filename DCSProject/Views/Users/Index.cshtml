@@ -1,0 +1,69 @@
+﻿@model List<DCSProject.Models.UserRoleViewModel>
+@{
+	ViewData["Title"] = "Manage Users";
+}
+
+<h1>Manage Users</h1>
+
+<!--Messages set by the controller (TempData lasts for one page load)-->
+@if (TempData["Message"] != null)
+{
+	<div class="alert alert-success">@TempData["Message"]</div>
+}
+@if (TempData["Error"] != null)
+{
+	<div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="table-responsive">
+	<table class="table align-middle">
+		<thead>
+			<tr>
+				<th>Display Name</th>
+				<th>Email</th>
+				<th>Role</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<!--Loop to repeat a row for each user-->
+			@foreach (DCSProject.Models.UserRoleViewModel user in Model)
+			{
+				<tr>
+					<td>@user.DisplayName</td>
+					<td>@user.Email</td>
+					<td>
+						@if (user.IsAdmin)
+						{
+							<span class="badge bg-primary">Admin</span>
+						}
+						else
+						{
+							<span class="badge bg-secondary">User</span>
+						}
+					</td>
+					<td class="text-end">
+						@if (user.IsCurrentUser)
+						{
+							<span class="text-muted">(you)</span>
+						}
+						else if (user.IsAdmin)
+						{
+							<!--Small form (POST) with the user's id. The tag helper adds the anti-forgery token-->
+							<form asp-controller="Users" asp-action="RemoveAdmin" asp-route-id="@user.Id" method="post"
+								  onsubmit="return confirm('Remove Admin from @user.Email?');">
+								<button type="submit" class="btn btn-outline-danger btn-sm">Remove Admin</button>
+							</form>
+						}
+						else
+						{
+							<form asp-controller="Users" asp-action="MakeAdmin" asp-route-id="@user.Id" method="post">
+								<button type="submit" class="btn btn-outline-primary btn-sm">Make Admin</button>
+							</form>
+						}
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
