@@ -3,7 +3,7 @@
 namespace DCSProject.Services;
 
 /// <summary>
-/// List of every game made by the studio
+/// List of every game made by the studio. These are copied into the database the first time the site runs
 /// To Add a new game: Copy the template from the commented out section bellow
 /// </summary>
 public static class GameCatalog

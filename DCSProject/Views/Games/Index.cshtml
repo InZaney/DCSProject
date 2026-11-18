@@ -5,6 +5,12 @@
 
 <h1>Our Games</h1>
 
+<!--Only shown to signed-in Admins-->
+@if (User.IsInRole("Admin"))
+{
+	<p><a class="btn btn-outline-primary" asp-controller="Games" asp-action="Add">Add a Game</a></p>
+}
+
 <div class="row">
 	<!--Loop to repeat the card for each game in the catalog-->
 	@foreach (DCSProject.Models.GameInfo game in Model)

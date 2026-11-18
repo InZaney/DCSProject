@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DCSProject.Migrations;
 
 [DbContext(typeof(DcsDb))]
-[Migration("20261115225423_InitialCreate")]
-partial class _20261115225423_InitialCreate
+[Migration("20261117062014_InitialCreate")]
+partial class _20261117062014_InitialCreate
 {
     /// <inheritdoc />
     protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,9 +159,12 @@ partial class _20261115225423_InitialCreate
 
         modelBuilder.Entity("DCSProject.Models.GameInfo", b =>
             {
-                b.Property<string>("GameId")
+                var gameId = b.Property<int>("GameId")
+                    .ValueGeneratedOnAdd()
                     .HasMaxLength(100)
-                    .HasColumnType("nvarchar(100)");
+                    .HasColumnType("int");
+
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(gameId);
 
                 b.Property<string>("Description")
                     .IsRequired()

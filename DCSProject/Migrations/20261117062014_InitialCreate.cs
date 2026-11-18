@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DCSProject.Migrations;
 
 /// <inheritdoc />
-public partial class _20261115225423_InitialCreate : Migration
+public partial class _20261117062014_InitialCreate : Migration
 {
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
@@ -73,7 +73,8 @@ public partial class _20261115225423_InitialCreate : Migration
             name: "Games",
             columns: table => new
             {
-                GameId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                GameId = table.Column<int>(type: "int", maxLength: 100, nullable: false)
+                    .Annotation("SqlServer:Identity", "1, 1"),
                 SteamAppId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                 LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                 Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),

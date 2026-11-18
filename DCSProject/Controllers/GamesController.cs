@@ -1,5 +1,6 @@
 ﻿using DCSProject.Models;
 using DCSProject.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System.Diagnostics;
@@ -12,50 +13,82 @@ namespace DCSProject.Controllers;
 
 public class GamesController : Controller
 {
-    private readonly SteamService _steam;
+    private readonly GameService _games;
 
-    public GamesController(SteamService steam)
+    public GamesController(GameService games)
     {
-        _steam = steam;
+        _games = games;
     }
 
     public async Task<IActionResult> Index()
     {
+        // Pull every game from the database 
+        List<GameInfo> games = await _games.GetAllGamesAsync();
+
         // Check to see if there is more than one game present
-        if (GameCatalog.All.Count == 1)
+        if (games.Count == 1)
         {
-            return RedirectToAction(nameof(Details), new {id = GameCatalog.All[0].GameName });
+            return RedirectToAction(nameof(Details), new {id = games[0].GameName });
         }
 
         // More than one game so display a list to the user
-        IEnumerable<Task<GameInfo>> tasks = GameCatalog.All.Select(entry => _steam.GetGameAsync(entry));
-        GameInfo[] games = await Task.WhenAll(tasks);
-
-        // Send the list
-        return View(games.ToList());
+        return View(games);
     }
 
     public async Task<IActionResult> Details(string id)
     {
-        // Find the entry in the catalog with that id(GameName)
-        GameEntry? entry = GameCatalog.All.FirstOrDefault(g => string.Equals(g.GameName, id, StringComparison.OrdinalIgnoreCase));
+        // Find the entry in the database with that id(GameName)
+        GameInfo? game = await _games.GetGameAsync(id);
 
         // If no game match is found, display an error to the user
-        if (entry == null)
+        if (game == null)
         {
             return NotFound();
         }
 
-        // Pass the games SteamId into the API call and build the games info for the page
-        GameInfo game = await _steam.GetGameAsync(entry);
-
         // On the games detail page, a back to list link only appears if there is more than one game in the catalog
-        ViewBag.MoreThanOneGame = GameCatalog.All.Count > 1;
+        ViewBag.MoreThanOneGame = await _games.GetGameCountAsync() > 1;
 
         return View(game);
     }
 
+    // Shows the empty add game form only to Admin users
+    [Authorize(Roles = "Admin")]
+    [HttpGet]
+    public IActionResult Add()
+    {
+        return View(new AddGame);
+    }
 
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Add(AddGame model)
+    {
+        // Send the form back with error messages if rule is broken
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        // Check to ensure we are not adding a game that already exist
+        if (await _games.GameExistsAsync(model.GameName, model.SteamAppId))
+        {
+            ModelState.AddModelError("", "A game with that name or Steam app id already exist");
+            return View(model);
+        }
+
+        GameInfo? game = await _games.AddGameAsync(model.GameName, model.SteamAppId);
+
+        if (game == null)
+        {
+            ModelState.AddModelError("SteamAppId", "Steam did not return a game for that app id. Please check it and try again");
+            return View(model);
+        }
+
+        // Go to the new games page
+        return RedirectToAction(nameof(Details), new { id = game.GameName });
+    }
 
     public IActionResult Privacy()
     {
