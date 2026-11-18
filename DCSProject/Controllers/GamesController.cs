@@ -1,5 +1,6 @@
 ﻿using DCSProject.Models;
 using DCSProject.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System.Diagnostics;
@@ -51,7 +52,43 @@ public class GamesController : Controller
         return View(game);
     }
 
+    // Shows the empty add game form only to Admin users
+    [Authorize(Roles = "Admin")]
+    [HttpGet]
+    public IActionResult Add()
+    {
+        return View(new AddGame);
+    }
 
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Add(AddGame model)
+    {
+        // Send the form back with error messages if rule is broken
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        // Check to ensure we are not adding a game that already exist
+        if (await _games.GameExistsAsync(model.GameName, model.SteamAppId))
+        {
+            ModelState.AddModelError("", "A game with that name or Steam app id already exist");
+            return View(model);
+        }
+
+        GameInfo? game = await _games.AddGameAsync(model.GameName, model.SteamAppId);
+
+        if (game == null)
+        {
+            ModelState.AddModelError("SteamAppId", "Steam did not return a game for that app id. Please check it and try again");
+            return View(model);
+        }
+
+        // Go to the new games page
+        return RedirectToAction(nameof(Details), new { id = game.GameName });
+    }
 
     public IActionResult Privacy()
     {
