@@ -37,10 +37,29 @@
 
                     <!--Seperate list for login so we can push it to the right side-->
                     <ul class="navbar-nav">
-                        <!--Placeholder for the Login/ Accounts pages-->
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                        </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <!--Signed in: greet the user and show Logout-->
+                            <li class="nav-item">
+                                <span class="navbar-text me-md-3">Hello, @(User.FindFirst("DisplayName")?.Value ?? User.Identity?.Name)</span>
+                            </li>
+                            <li class="nav-item">
+                                <!--Logout is a small form (POST) so it includes the anti-forgery token-->
+                                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                                    <button type="submit" class="nav-link btn btn-link">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <!--Not signed in: show Register and Login-->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
