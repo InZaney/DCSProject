@@ -10,6 +10,12 @@
 	<a asp-controller="Games" asp-action="Index">&larr; All Games</a>
 }
 
+<!--Only shown to signed-in Admins-->
+@if (User.IsInRole("Admin"))
+{
+	<a class="float-end btn btn-outline-primary btn-sm" asp-controller="Games" asp-action="Add">Add a Game</a>
+}
+
 <!--Top Of the page: Game title and artwork-->
 <div class="text-center">
 	<h1 class="display-4">@Model.Title</h1>
