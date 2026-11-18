@@ -60,6 +60,12 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 
+// Creates the first Admin account from the User Secrets (if they are set). See docs/AUTH.md
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    await AdminSeeder.SeedAsync(scope.ServiceProvider);
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
