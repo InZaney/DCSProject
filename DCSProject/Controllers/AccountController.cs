@@ -67,7 +67,64 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    public IActionResult Index()
+    // Shows the empty login form to the user
+    [HttpGet]
+    public IActionResult Login(string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+        return View(new LoginViewModel());
+    }
+
+    // Runs when login is submitted and checks the provided details
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        // Users email is the username. LockoutOnFailure counts wrong passwords so the account can be locked
+        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
+
+        if (result.Succeeded)
+        {
+            // Only go back to the page they wanted to if it is on our site
+            // Will stop links that sends users elsewhere
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        if (result.IsLockedOut)
+        {
+            ModelState.AddModelError("", "Too many failed attempts. Please try again in 15 minutes");
+            return View(model);
+        }
+
+        // Same message used for wrong email or password. This stops phishing attempts for what emails have accounts
+        ModelState.AddModelError("", "Invalid email or password");
+        return View(model);
+    }
+
+    // Signs the user out of the site
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return RedirectToAction("Index", "Home");
+    }
+
+    // Shown if a signed in user reaches a page their role is not allowed
+    [HttpGet]
+    public IActionResult AccessDenied()
     {
         return View();
     }
