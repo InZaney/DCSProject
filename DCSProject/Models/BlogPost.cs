@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace DCSProject.Models;
 
 /// <summary>
 /// Represents a single blog post
 /// </summary>
+[Index(nameof(DiscordMessageId), IsUnique = true)] // The same message can only be one post
 public class BlogPost
 {
     /// <summary>
@@ -41,4 +43,10 @@ public class BlogPost
     /// Comments left on the post
     /// </summary>
     public List<Comment> Comments { get; set; } = new();
+
+    /// <summary>
+    /// Id of the discord message that the post originated from. Utilized for updating or removing the post
+    /// </summary>
+    [StringLength(30)]
+    public string? DiscordMessageId { get; set; }
 }

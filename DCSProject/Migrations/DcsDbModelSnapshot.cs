@@ -117,12 +117,20 @@ partial class DcsDbModelSnapshot : ModelSnapshot
                 b.Property<DateOnly>("DatePosted")
                     .HasColumnType("date");
 
+                b.Property<string>("DiscordMessageId")
+                    .HasMaxLength(30)
+                    .HasColumnType("nvarchar(30)");
+
                 b.Property<string>("Title")
                     .IsRequired()
                     .HasMaxLength(100)
                     .HasColumnType("nvarchar(100)");
 
                 b.HasKey("BlogPostId");
+
+                b.HasIndex("DiscordMessageId")
+                    .IsUnique()
+                    .HasFilter("[DiscordMessageId] IS NOT NULL");
 
                 b.ToTable("BlogPosts");
             });

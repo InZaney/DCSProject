@@ -30,6 +30,14 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 // Configure DB Context settings
 builder.Services.AddDbContext<DcsDb>(options => options.UseSqlServer(connectionString));
 
+builder.Services.AddScoped<BlogService>();
+
+// Lets DiscordService call the Discord API
+builder.Services.AddHttpClient<DiscordService>(client =>
+{
+    client.BaseAddress = new Uri("https://discord.com/api/v10/");
+    client.Timeout = TimeSpan.FromSeconds(10);
+    client.DefaultRequestHeaders.UserAgent.TryParseAdd("DiscordBot (https://github.com/InZaney/DCSProject, 1.0)");
 // Login system (ASP.NET Identity). Handles users, hashed passwords, roles and the login cookie
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
