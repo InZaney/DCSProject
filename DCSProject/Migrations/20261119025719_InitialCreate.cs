@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DCSProject.Migrations;
 
 /// <inheritdoc />
-public partial class _20261119021651_InitialCreate : Migration
+public partial class _20261119025719_InitialCreate : Migration
 {
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)

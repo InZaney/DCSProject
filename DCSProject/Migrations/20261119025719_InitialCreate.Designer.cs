@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DCSProject.Migrations;
 
 [DbContext(typeof(DcsDb))]
-[Migration("20261119021651_InitialCreate")]
-partial class _20261119021651_InitialCreate
+[Migration("20261119025719_InitialCreate")]
+partial class _20261119025719_InitialCreate
 {
     /// <inheritdoc />
     protected override void BuildTargetModel(ModelBuilder modelBuilder)
