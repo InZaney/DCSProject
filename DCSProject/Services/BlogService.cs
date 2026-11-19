@@ -18,7 +18,7 @@ public class BlogService
     private readonly ILogger<BlogService> _logger;
 
     // How long to wait between checks of the Discord channel
-    private static readonly TimeSpan RefreshAfter = TimeSpan.FromHours(1);
+    private static readonly TimeSpan RefreshAfter = TimeSpan.FromMinutes(1);
 
     // If Discord fails, wait this long before trying again
     private static readonly TimeSpan RetryAfter = TimeSpan.FromMinutes(1);
