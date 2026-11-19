@@ -1,6 +1,8 @@
 using DCSProject.Controllers;
 using DCSProject.Data;
+using DCSProject.Models;
 using DCSProject.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,9 @@ builder.Services.AddControllersWithViews();
 
 // Lets the site remember data for a while (used to cache the Steam response)
 builder.Services.AddMemoryCache();
+
+// Register the GameService 
+builder.Services.AddScoped<GameService>();
 
 // Lets SteamService receive an HttpClient so it can call the Steam API
 // Timeout added to ensure if steam is slow it does not hang up the page
@@ -33,9 +38,50 @@ builder.Services.AddHttpClient<DiscordService>(client =>
     client.BaseAddress = new Uri("https://discord.com/api/v10/");
     client.Timeout = TimeSpan.FromSeconds(10);
     client.DefaultRequestHeaders.UserAgent.TryParseAdd("DiscordBot (https://github.com/InZaney/DCSProject, 1.0)");
+// Login system (ASP.NET Identity). Handles users, hashed passwords, roles and the login cookie
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    // Password rules
+    options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+
+    // Two accounts cannot share the same email
+    options.User.RequireUniqueEmail = true;
+
+    // Lock the account for 15 minutes after 5 wrong passwords in a row
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+})
+.AddEntityFrameworkStores<DcsDb>()   // store users and roles in our database
+.AddClaimsPrincipalFactory<ApplicationUserClaimsPrincipalFactory>();   // adds the display name to the login cookie
+
+// Settings for the login cookie
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";               // where visitors are sent when they must sign in
+    options.AccessDeniedPath = "/Account/AccessDenied"; // where signed-in users are sent if their role is not allowed
+    options.Cookie.HttpOnly = true;                     // JavaScript cannot read the cookie
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // only sent over https
+    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+    options.SlidingExpiration = true;                   // stays signed in while the user keeps using the site
+});
+
+// Re-checks logged-in users every minute (the default is 30), so role changes take effect quickly
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+{
+    options.ValidationInterval = TimeSpan.FromMinutes(1);
 });
 
 var app = builder.Build();
+
+// Creates the first Admin account from the User Secrets (if they are set). See docs/AUTH.md
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    await AdminSeeder.SeedAsync(scope.ServiceProvider);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -17,7 +17,7 @@ public class GameInfo
     /// </summary>
     [StringLength(100)]
     [Key]
-    public string GameId { get; set; }
+    public int GameId { get; set; }
 
     /// <summary>
     /// Steam app Id used for the api call

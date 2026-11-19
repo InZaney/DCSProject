@@ -1,0 +1,33 @@
+﻿@model DCSProject.Models.AddGame
+@{
+	ViewData["Title"] = "Add Game";
+}
+
+<h1>Add a Game</h1>
+<p>Enter the two values below. Steam supplies the title, description, price, artwork and the rest.</p>
+
+<!--The form sends its values to the Add action that has [HttpPost]. The tag helper adds the anti-forgery token automatically-->
+<form asp-controller="Games" asp-action="Add" method="post">
+	<!--Shows errors that are not about one field, like a duplicate game-->
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+	<div class="mb-3">
+		<label asp-for="GameName" class="form-label"></label>
+		<input asp-for="GameName" class="form-control" />
+		<span asp-validation-for="GameName" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="SteamAppId" class="form-label"></label>
+		<input asp-for="SteamAppId" class="form-control" />
+		<span asp-validation-for="SteamAppId" class="text-danger"></span>
+		<div class="form-text">Find it in the game's Steam link: store.steampowered.com/app/<strong>4735850</strong>/Game_Name</div>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Add Game</button>
+	<a asp-controller="Games" asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
