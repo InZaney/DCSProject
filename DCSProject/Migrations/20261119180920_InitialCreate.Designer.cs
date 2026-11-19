@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DCSProject.Migrations;
 
 [DbContext(typeof(DcsDb))]
-[Migration("20261117062014_InitialCreate")]
-partial class _20261117062014_InitialCreate
+[Migration("20261119180920_InitialCreate")]
+partial class _20261119180920_InitialCreate
 {
     /// <inheritdoc />
     protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -115,12 +115,20 @@ partial class _20261117062014_InitialCreate
                 b.Property<DateOnly>("DatePosted")
                     .HasColumnType("date");
 
+                b.Property<string>("DiscordMessageId")
+                    .HasMaxLength(30)
+                    .HasColumnType("nvarchar(30)");
+
                 b.Property<string>("Title")
                     .IsRequired()
                     .HasMaxLength(100)
                     .HasColumnType("nvarchar(100)");
 
                 b.HasKey("BlogPostId");
+
+                b.HasIndex("DiscordMessageId")
+                    .IsUnique()
+                    .HasFilter("[DiscordMessageId] IS NOT NULL");
 
                 b.ToTable("BlogPosts");
             });

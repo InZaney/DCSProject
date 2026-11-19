@@ -38,6 +38,8 @@ builder.Services.AddHttpClient<DiscordService>(client =>
     client.BaseAddress = new Uri("https://discord.com/api/v10/");
     client.Timeout = TimeSpan.FromSeconds(10);
     client.DefaultRequestHeaders.UserAgent.TryParseAdd("DiscordBot (https://github.com/InZaney/DCSProject, 1.0)");
+});
+
 // Login system (ASP.NET Identity). Handles users, hashed passwords, roles and the login cookie
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -76,6 +78,13 @@ builder.Services.Configure<SecurityStampValidatorOptions>(options =>
 });
 
 var app = builder.Build();
+
+// Apply migrations and create the database
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    DcsDb db = scope.ServiceProvider.GetRequiredService<DcsDb>();
+    await db.Database.MigrateAsync();
+}
 
 // Creates the first Admin account from the User Secrets (if they are set). See docs/AUTH.md
 using (IServiceScope scope = app.Services.CreateScope())

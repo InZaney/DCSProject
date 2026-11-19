@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DCSProject.Migrations;
 
 /// <inheritdoc />
-public partial class _20261117181849_InitialCreate : Migration
+public partial class _20261119180920_InitialCreate : Migration
 {
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,7 +62,8 @@ public partial class _20261117181849_InitialCreate : Migration
                 Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                 BlogContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
                 Author = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                DatePosted = table.Column<DateOnly>(type: "date", nullable: false)
+                DatePosted = table.Column<DateOnly>(type: "date", nullable: false),
+                DiscordMessageId = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true)
             },
             constraints: table =>
             {
@@ -275,6 +276,13 @@ public partial class _20261117181849_InitialCreate : Migration
             column: "NormalizedUserName",
             unique: true,
             filter: "[NormalizedUserName] IS NOT NULL");
+
+        migrationBuilder.CreateIndex(
+            name: "IX_BlogPosts_DiscordMessageId",
+            table: "BlogPosts",
+            column: "DiscordMessageId",
+            unique: true,
+            filter: "[DiscordMessageId] IS NOT NULL");
 
         migrationBuilder.CreateIndex(
             name: "IX_Comments_BlogPostId",
