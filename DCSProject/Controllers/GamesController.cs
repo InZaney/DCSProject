@@ -57,7 +57,7 @@ public class GamesController : Controller
     [HttpGet]
     public IActionResult Add()
     {
-        return View(new AddGame);
+        return View(new AddGame());
     }
 
     [Authorize(Roles = "Admin")]
