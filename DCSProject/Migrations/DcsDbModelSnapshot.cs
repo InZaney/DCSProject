@@ -16,7 +16,7 @@ partial class DcsDbModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20261115225423_InitialCreate";
+    public override string LastMigrationId => "20261119021651_InitialCreate";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
@@ -117,12 +117,20 @@ partial class DcsDbModelSnapshot : ModelSnapshot
                 b.Property<DateOnly>("DatePosted")
                     .HasColumnType("date");
 
+                b.Property<string>("DiscordMessageId")
+                    .HasMaxLength(30)
+                    .HasColumnType("nvarchar(30)");
+
                 b.Property<string>("Title")
                     .IsRequired()
                     .HasMaxLength(100)
                     .HasColumnType("nvarchar(100)");
 
                 b.HasKey("BlogPostId");
+
+                b.HasIndex("DiscordMessageId")
+                    .IsUnique()
+                    .HasFilter("[DiscordMessageId] IS NOT NULL");
 
                 b.ToTable("BlogPosts");
             });
