@@ -15,7 +15,6 @@ public class GameInfo
     /// <summary>
     /// Unique Id for the game
     /// </summary>
-    [StringLength(100)]
     [Key]
     public int GameId { get; set; }
 
