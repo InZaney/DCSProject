@@ -90,6 +90,14 @@ public class GamesController : Controller
         return RedirectToAction(nameof(Details), new { id = game.GameName });
     }
 
+    // Displays the edit form to an admin with the games current name and SteamId
+    [Authorize(Roles = "Admin")]
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+
+    }
+
     public IActionResult Privacy()
     {
         return View();
