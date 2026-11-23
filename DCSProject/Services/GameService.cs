@@ -178,4 +178,14 @@ public class GameService
     {
         return await _db.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
     }
+
+    /// <summary>
+    /// Will return true if a game with that name or id already exist
+    /// </summary>
+    public async Task<bool> GameExistsAsync(string gameName, string steamAppId, int? excludeGameId = null)
+    {
+        return await _db.Games.AnyAsync(g =>
+            (excludeGameId == null || g.GameId != excludeGameId) &&
+            (g.GameName == gameName || g.SteamAppId == steamAppId));
+    }
 }
