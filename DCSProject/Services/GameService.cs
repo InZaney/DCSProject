@@ -170,4 +170,12 @@ public class GameService
 
         return game;
     }
+
+    /// <summary>
+    /// Gets one game from the database by its database id (for edit and delete)
+    /// </summary>
+    public async Task<GameInfo?> GetGameByIdAsync(int gameId)
+    {
+        return await _db.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
+    }
 }
