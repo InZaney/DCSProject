@@ -148,6 +148,34 @@ public class GamesController : Controller
         return RedirectToAction(nameof(Details), new { id = game.GameName });
     }
 
+    /// <summary>
+    /// Deletes a game from the database
+    /// </summary>
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        GameInfo? game = await _games.GetGameByIdAsync(id);
+
+        if (game == null)
+        {
+            return NotFound();
+        }
+
+        // The site always keeps at least one game. (An empty table would bring the starter game back automatically)
+        if (await _games.GetGameCountAsync() <= 1)
+        {
+            TempData["Error"] = "You cannot delete the last game. Add the new game first, then delete this one.";
+            return RedirectToAction(nameof(Details), new { id = game.GameName });
+        }
+
+        await _games.DeleteGameAsync(id);
+
+        TempData["Message"] = $"{game.Title} was deleted.";
+        return RedirectToAction(nameof(Index));
+    }
+
     public IActionResult Privacy()
     {
         return View();

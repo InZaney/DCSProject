@@ -238,4 +238,22 @@ public class GameService
         return game;
     }
 
+    /// <summary>
+    /// Checks for and deletes the selected game from the catalog
+    /// </summary>
+    public async Task<bool> DeleteGameAsync(int gameId)
+    {
+        GameInfo? game = await _db.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
+
+        if (game == null)
+        {
+            return false;
+        }
+
+        _db.Games.Remove(game);
+        await _db.SaveChangesAsync();
+
+        return true;
+    }
+
 }
