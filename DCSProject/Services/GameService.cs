@@ -170,4 +170,90 @@ public class GameService
 
         return game;
     }
+
+    /// <summary>
+    /// Gets one game from the database by its database id (for edit and delete)
+    /// </summary>
+    public async Task<GameInfo?> GetGameByIdAsync(int gameId)
+    {
+        return await _db.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
+    }
+
+    /// <summary>
+    /// Will return true if a game with that name or id already exist
+    /// </summary>
+    public async Task<bool> GameExistsAsync(string gameName, string steamAppId, int? excludeGameId = null)
+    {
+        return await _db.Games.AnyAsync(g =>
+            (excludeGameId == null || g.GameId != excludeGameId) &&
+            (g.GameName == gameName || g.SteamAppId == steamAppId));
+    }
+
+    /// <summary>
+    /// Changes a games name or SteamId
+    /// </summary>
+    public async Task<GameInfo?> EditGameAsync(int gameId, string gameName, string steamAppId)
+    {
+        GameInfo? game = await _db.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
+
+        if (game == null)
+        {
+            return null;
+        }
+
+        bool steamIdChanged = game.SteamAppId != steamAppId;
+
+        game.GameName = gameName;
+        game.SteamAppId = steamAppId;
+
+        if (steamIdChanged)
+        {
+            // It is a different game now, so clear the old game's details first.
+            // Otherwise anything Steam leaves out (like the price of a free game) would keep the OLD game's value
+            game.Title = gameName;
+            game.Description = "";
+            game.Developer = "";
+            game.ReleaseDate = default;
+            game.Price = 0;
+            game.Platform = "Not listed";
+            game.PlayerCount = "Not listed";
+            game.SteamUrl = "https://store.steampowered.com/app/" + steamAppId;
+            game.HeaderImageUrl = "";
+            game.SystemRequirements = new List<string>();
+
+            bool steamAnswered = await _steam.ApplySteamDataAsync(game);
+
+            // No answer means the new Steam id is probably wrong. We return without saving, so the database keeps the old game
+            if (!steamAnswered)
+            {
+                return null;
+            }
+
+            game.LastUpdated = DateTime.UtcNow;
+        }
+
+        await _db.SaveChangesAsync();
+
+        // Takes the user to the newly updated game
+        return game;
+    }
+
+    /// <summary>
+    /// Checks for and deletes the selected game from the catalog
+    /// </summary>
+    public async Task<bool> DeleteGameAsync(int gameId)
+    {
+        GameInfo? game = await _db.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
+
+        if (game == null)
+        {
+            return false;
+        }
+
+        _db.Games.Remove(game);
+        await _db.SaveChangesAsync();
+
+        return true;
+    }
+
 }
