@@ -96,6 +96,6 @@ public class GameInfo
     /// <summary>
     /// The number of players the game supports
     /// </summary>
-    [StringLength(75)]
+    [StringLength(200)]
     public required string PlayerCount { get; set; }
 }

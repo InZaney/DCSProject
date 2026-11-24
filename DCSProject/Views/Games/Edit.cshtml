@@ -1,0 +1,37 @@
+﻿@model DCSProject.Models.EditGame
+@{
+	ViewData["Title"] = "Edit Game";
+}
+
+<h1>Edit Game</h1>
+<p>You can change the name used in the web address and the Steam app id.</p>
+<p class="text-muted">If you change the Steam app id, the game's title, description, price and artwork are replaced with the new game's details from Steam.</p>
+
+<!--The tag helper adds the anti-forgery token to the form automatically-->
+<form asp-controller="Games" asp-action="Edit" method="post">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+	<!--Hidden field so the controller knows which game is being edited-->
+	<input type="hidden" asp-for="GameId" />
+
+	<div class="mb-3">
+		<label asp-for="GameName" class="form-label"></label>
+		<input asp-for="GameName" class="form-control" />
+		<span asp-validation-for="GameName" class="text-danger"></span>
+		<div class="form-text">Changing this changes the game's web address, so old links to it will stop working.</div>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="SteamAppId" class="form-label"></label>
+		<input asp-for="SteamAppId" class="form-control" />
+		<span asp-validation-for="SteamAppId" class="text-danger"></span>
+		<div class="form-text">Find it in the game's Steam link: store.steampowered.com/app/<strong>4735850</strong>/Game_Name</div>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Save Changes</button>
+	<a asp-controller="Games" asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

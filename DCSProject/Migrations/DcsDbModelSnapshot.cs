@@ -16,7 +16,7 @@ partial class DcsDbModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20261119180920_InitialCreate";
+    public override string LastMigrationId => "20261124033123_WidenPlayerCount";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
@@ -171,7 +171,6 @@ partial class DcsDbModelSnapshot : ModelSnapshot
             {
                 var gameId = b.Property<int>("GameId")
                     .ValueGeneratedOnAdd()
-                    .HasMaxLength(100)
                     .HasColumnType("int");
 
                 SqlServerPropertyBuilderExtensions.UseIdentityColumn(gameId);
@@ -203,8 +202,8 @@ partial class DcsDbModelSnapshot : ModelSnapshot
 
                 b.Property<string>("PlayerCount")
                     .IsRequired()
-                    .HasMaxLength(75)
-                    .HasColumnType("nvarchar(75)");
+                    .HasMaxLength(200)
+                    .HasColumnType("nvarchar(200)");
 
                 b.Property<decimal>("Price")
                     .HasColumnType("decimal(8, 2)");

@@ -90,6 +90,92 @@ public class GamesController : Controller
         return RedirectToAction(nameof(Details), new { id = game.GameName });
     }
 
+    // Displays the edit form to an admin with the games current name and SteamId
+    [Authorize(Roles = "Admin")]
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        GameInfo? game = await _games.GetGameByIdAsync(id);
+
+        if (game == null)
+        {
+            return NotFound();
+        }
+
+        return View(new EditGame
+        {
+            GameId = game.GameId,
+            GameName = game.GameName,
+            SteamAppId = game.SteamAppId
+        });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(EditGame model)
+    {
+        // Send the form back with error messages if a rule on the view model was broken
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        GameInfo? existing = await _games.GetGameByIdAsync(model.GameId);
+
+        if (existing == null)
+        {
+            return NotFound();
+        }
+
+        // Do not allow the same name or Steam id as ANOTHER game (the game itself is allowed to keep its own)
+        if (await _games.GameExistsAsync(model.GameName, model.SteamAppId, model.GameId))
+        {
+            ModelState.AddModelError("", "Another game already uses that name or Steam app id.");
+            return View(model);
+        }
+
+        // Save the change. Null means Steam had nothing for the new Steam id
+        GameInfo? game = await _games.EditGameAsync(model.GameId, model.GameName, model.SteamAppId);
+
+        if (game == null)
+        {
+            ModelState.AddModelError("SteamAppId", "Steam did not return a game for that app id. Check the number and try again.");
+            return View(model);
+        }
+
+        TempData["Message"] = $"{game.Title} was updated.";
+        return RedirectToAction(nameof(Details), new { id = game.GameName });
+    }
+
+    /// <summary>
+    /// Deletes a game from the database
+    /// </summary>
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        GameInfo? game = await _games.GetGameByIdAsync(id);
+
+        if (game == null)
+        {
+            return NotFound();
+        }
+
+        // The site always keeps at least one game. (An empty table would bring the starter game back automatically)
+        if (await _games.GetGameCountAsync() <= 1)
+        {
+            TempData["Error"] = "You cannot delete the last game. Add the new game first, then delete this one.";
+            return RedirectToAction(nameof(Details), new { id = game.GameName });
+        }
+
+        await _games.DeleteGameAsync(id);
+
+        TempData["Message"] = $"{game.Title} was deleted.";
+        return RedirectToAction(nameof(Index));
+    }
+
     public IActionResult Privacy()
     {
         return View();

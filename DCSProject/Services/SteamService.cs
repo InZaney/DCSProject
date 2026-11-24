@@ -32,9 +32,9 @@ public class SteamService
         // If reply received from steam, overwrite hard-coded data
         if (steam != null)
         {
-            game.Title = steam.Name ?? game.Title;
+            game.Title = Limit(steam.Name ?? game.Title, 100);
             game.Description = steam.ShortDescription ?? game.Description;
-            game.Developer = steam.Developers?.FirstOrDefault() ?? game.Developer;
+            game.Developer = Limit(steam.Developers?.FirstOrDefault() ?? game.Developer, 75);
             game.HeaderImageUrl = steam.HeaderImage ?? game.HeaderImageUrl;
 
             // Transition steam date from text to dateonly
@@ -72,7 +72,7 @@ public class SteamService
                                                           .ToList();
                 if (playerTags.Count > 0)
                 {
-                    game.PlayerCount = string.Join(", ", playerTags);
+                    game.PlayerCount = Limit(string.Join(", ", playerTags), 200);
                 }
             }
 
@@ -149,5 +149,11 @@ public class SteamService
             }
         }
         return lines;
+    }
+
+    // Cuts text down so it never overuns and crashes the project
+    private static string Limit(string text, int maxLength)
+    {
+        return text.Length <= maxLength ? text : text.Substring(0, maxLength);
     }
 }
