@@ -148,6 +148,7 @@ public class BlogService
                 existing.Title = post.Title;
                 existing.BlogContent = post.Body;
                 existing.Author = post.Author;
+                existing.DatePosted = post.Date;
             }
             else
             {
@@ -235,11 +236,11 @@ public class BlogService
         }
 
         // The post date is the day the message was sent (UTC)
-        DateOnly date = DateOnly.FromDateTime(message.Timestamp.UtcDateTime);
+        DateTime date = message.Timestamp.UtcDateTime;
 
         return new ParsedPost(title, body, author, date);
     }
 
     // A post worked out from a message, before it is saved
-    private record ParsedPost(string Title, string Body, string Author, DateOnly Date);
+    private record ParsedPost(string Title, string Body, string Author, DateTime Date);
 }

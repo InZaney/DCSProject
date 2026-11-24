@@ -114,8 +114,8 @@ partial class DcsDbModelSnapshot : ModelSnapshot
                     .IsRequired()
                     .HasColumnType("nvarchar(max)");
 
-                b.Property<DateOnly>("DatePosted")
-                    .HasColumnType("date");
+                b.Property<DateTime>("DatePosted")
+                    .HasColumnType("datetime2");
 
                 b.Property<string>("DiscordMessageId")
                     .HasMaxLength(30)

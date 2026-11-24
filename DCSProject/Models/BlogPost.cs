@@ -36,8 +36,8 @@ public class BlogPost
     /// <summary>
     /// Date of the Post
     /// </summary>
-    [DataType(DataType.Date)]
-    public DateOnly DatePosted { get; set; }
+    [DataType(DataType.DateTime)]
+    public DateTime DatePosted { get; set; }
 
     /// <summary>
     /// Comments left on the post

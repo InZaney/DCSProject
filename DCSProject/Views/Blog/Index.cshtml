@@ -3,6 +3,11 @@
 	ViewData["Title"] = "Blog";
 }
 
+@if (Model.Count == 0)
+{
+    <p>No posts yet. Check back soon!</p>
+}
+
 @foreach (BlogPost post in Model)
 {
     <article class="card mb-3">
@@ -10,7 +15,8 @@
             <h2 class="h4 card-title">@post.Title</h2>
 
             <h3 class="h6 card-subtitle mb-2 text-muted">
-                @post.DatePosted.ToString("MMMM d, yyyy") by @post.Author
+                <time class="local-time" datetime="@post.DatePosted.ToString("yyyy-MM-ddTHH:mm:ss")Z">@post.DatePosted.ToString("MMMM d, yyyy h:mm tt") UTC</time>
+                by @post.Author
             </h3>
 
             <p class="card-text">
@@ -18,4 +24,16 @@
             </p>
         </div>
     </article>
+}
+
+@section Scripts {
+    <script>
+        // Show every post time in the visitor's own time zone
+        document.querySelectorAll("time.local-time").forEach(function (el) {
+            var date = new Date(el.getAttribute("datetime"));
+            if (!isNaN(date)) {
+                el.textContent = date.toLocaleString(undefined, { dateStyle: "long", timeStyle: "short" });
+            }
+        });
+    </script>
 }
