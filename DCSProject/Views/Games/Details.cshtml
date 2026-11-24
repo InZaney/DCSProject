@@ -10,10 +10,30 @@
 	<a asp-controller="Games" asp-action="Index">&larr; All Games</a>
 }
 
+<!--Messages set by the controller (TempData lasts for one page load)-->
+@if (TempData["Message"] != null)
+{
+	<div class="alert alert-success">@TempData["Message"]</div>
+}
+@if (TempData["Error"] != null)
+{
+	<div class="alert alert-danger">@TempData["Error"]</div>
+}
+
 <!--Only shown to signed-in Admins-->
 @if (User.IsInRole("Admin"))
 {
-	<a class="float-end btn btn-outline-primary btn-sm" asp-controller="Games" asp-action="Add">Add a Game</a>
+	<div class="float-end d-flex gap-2">
+		<a class="btn btn-outline-primary btn-sm" asp-controller="Games" asp-action="Edit" asp-route-id="@Model.GameId">Edit</a>
+
+		<!--Delete is a small form (POST) with the game's id. The confirm text is fixed on purpose: never put typed-in data inside JavaScript-->
+		<form asp-controller="Games" asp-action="Delete" asp-route-id="@Model.GameId" method="post"
+			  onsubmit="return confirm('Delete this game? This cannot be undone.');">
+			<button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+		</form>
+
+		<a class="btn btn-outline-primary btn-sm" asp-controller="Games" asp-action="Add">Add a Game</a>
+	</div>
 }
 
 <!--Top Of the page: Game title and artwork-->

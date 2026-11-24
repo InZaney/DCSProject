@@ -95,7 +95,57 @@ public class GamesController : Controller
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
+        GameInfo? game = await _games.GetGameByIdAsync(id);
 
+        if (game == null)
+        {
+            return NotFound();
+        }
+
+        return View(new EditGame
+        {
+            GameId = game.GameId,
+            GameName = game.GameName,
+            SteamAppId = game.SteamAppId
+        });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(EditGame model)
+    {
+        // Send the form back with error messages if a rule on the view model was broken
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        GameInfo? existing = await _games.GetGameByIdAsync(model.GameId);
+
+        if (existing == null)
+        {
+            return NotFound();
+        }
+
+        // Do not allow the same name or Steam id as ANOTHER game (the game itself is allowed to keep its own)
+        if (await _games.GameExistsAsync(model.GameName, model.SteamAppId, model.GameId))
+        {
+            ModelState.AddModelError("", "Another game already uses that name or Steam app id.");
+            return View(model);
+        }
+
+        // Save the change. Null means Steam had nothing for the new Steam id
+        GameInfo? game = await _games.EditGameAsync(model.GameId, model.GameName, model.SteamAppId);
+
+        if (game == null)
+        {
+            ModelState.AddModelError("SteamAppId", "Steam did not return a game for that app id. Check the number and try again.");
+            return View(model);
+        }
+
+        TempData["Message"] = $"{game.Title} was updated.";
+        return RedirectToAction(nameof(Details), new { id = game.GameName });
     }
 
     public IActionResult Privacy()
