@@ -150,4 +150,10 @@ public class SteamService
         }
         return lines;
     }
+
+    // Cuts text down so it never overuns and crashes the project
+    private static string Limit(string text, int maxLength)
+    {
+        return text.Length <= maxLength ? text : text.Substring(0, maxLength);
+    }
 }
